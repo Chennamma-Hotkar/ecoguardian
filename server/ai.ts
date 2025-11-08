@@ -12,16 +12,16 @@ export async function getChatResponse(
     categoryBreakdown: Record<string, number>;
   }
 ): Promise<string> {
-  const systemPrompt = `You are EcoGuardian AI, a helpful and knowledgeable environmental assistant specializing in carbon footprint reduction and sustainable living. 
+  const systemPrompt = `You are the AI Carbon-Chat Agent, an intelligent environmental assistant specializing in carbon calculations, sustainable product recommendations, and optimization strategies.
 
 Your role is to:
-- Provide personalized advice on reducing carbon emissions
-- Suggest eco-friendly alternatives and sustainable practices
-- Answer questions about climate change and environmental impact
-- Help users understand their carbon footprint data
-- Offer practical, actionable tips for everyday sustainability
+- Calculate precise carbon savings for specific actions (e.g., biking vs driving)
+- Recommend affordable sustainable products with price ranges
+- Provide optimization strategies for home energy, water, and resource usage
+- Answer questions using the user's actual carbon tracking data
+- Offer personalized, data-driven advice
 
-Be friendly, encouraging, and specific in your recommendations. Keep responses concise but informative.
+Be specific with numbers, calculations, and product recommendations. Keep responses concise but actionable.
 
 ${userContext ? `
 Current user carbon data:
@@ -31,6 +31,8 @@ Current user carbon data:
 - Energy: ${(userContext.categoryBreakdown.energy || 0).toFixed(1)} kg
 - Food: ${(userContext.categoryBreakdown.food || 0).toFixed(1)} kg
 - Shopping: ${(userContext.categoryBreakdown.shopping || 0).toFixed(1)} kg
+
+Use this data to provide personalized calculations and recommendations.
 ` : ''}`;
 
   try {
@@ -66,23 +68,36 @@ function getFallbackResponse(
 ): string {
   const messageLower = message.toLowerCase();
   
-  if (messageLower.includes('commute') || messageLower.includes('transport')) {
-    return `To reduce transportation emissions:\n\n1. Consider carpooling or using public transit when possible\n2. Bike or walk for short trips (under 2 miles)\n3. Combine multiple errands into one trip\n4. Maintain proper tire pressure to improve fuel efficiency\n5. Consider a hybrid or electric vehicle for your next car\n\n${userContext ? `Your current transportation footprint is ${(userContext.categoryBreakdown.transportation || 0).toFixed(1)} kg CO₂.` : ''}`;
+  if (messageLower.includes('bicycle') || messageLower.includes('bike') || messageLower.includes('cycling')) {
+    const avgCarEmissions = 0.411;
+    const distanceEstimate = 10;
+    const carbonSaved = (avgCarEmissions * distanceEstimate).toFixed(1);
+    return `🚴 Carbon Savings by Biking:\n\n✅ If you bike instead of driving today:\n• Distance (estimate): ${distanceEstimate} km\n• Carbon saved: ~${carbonSaved} kg CO₂\n• Weekly savings: ~${(parseFloat(carbonSaved) * 5).toFixed(1)} kg CO₂\n• Annual savings: ~${(parseFloat(carbonSaved) * 250).toFixed(0)} kg CO₂\n\nExtra benefits:\n• Save on fuel costs (~$5-8/day)\n• Improve cardiovascular health\n• Reduce traffic congestion\n\n${userContext ? `Your current transportation footprint is ${(userContext.categoryBreakdown.transportation || 0).toFixed(1)} kg CO₂. Biking could reduce this significantly!` : ''}`;
   }
   
-  if (messageLower.includes('energy') || messageLower.includes('electricity')) {
-    return `To reduce energy consumption:\n\n1. Switch to LED bulbs (75% less energy)\n2. Unplug devices when not in use\n3. Use a programmable thermostat\n4. Seal air leaks around windows and doors\n5. Consider renewable energy options like solar panels\n\n${userContext ? `Your current energy footprint is ${(userContext.categoryBreakdown.energy || 0).toFixed(1)} kg CO₂.` : ''}`;
+  if (messageLower.includes('under') && (messageLower.includes('$') || messageLower.includes('dollar') || messageLower.includes('10') || messageLower.includes('budget'))) {
+    return `💰 Best Sustainable Products Under $10:\n\n1. Reusable Shopping Bags ($3-5)\n   → Saves ~20 kg CO₂/year, eliminates 700+ plastic bags\n\n2. Bamboo Toothbrush Set ($6-8)\n   → Saves ~5 kg CO₂/year, biodegradable alternative\n\n3. LED Light Bulbs (2-pack) ($8-10)\n   → Saves ~40 kg CO₂/year, 75% less energy\n\n4. Reusable Produce Bags ($4-6)\n   → Saves ~10 kg CO₂/year, reduces plastic waste\n\n5. Metal Straws Set ($5-7)\n   → Eliminates 500+ plastic straws/year\n\nBest value: Reusable shopping bags offer the highest carbon savings per dollar spent!`;
+  }
+  
+  if (messageLower.includes('optimize') && (messageLower.includes('power') || messageLower.includes('energy') || messageLower.includes('home') || messageLower.includes('electricity'))) {
+    const energyFootprint = userContext?.categoryBreakdown.energy || 0;
+    return `⚡ Home Power Optimization Strategy:\n\n🔋 Quick Wins (Save 20-30%):\n• Smart power strips → Eliminate phantom drain (~50 kg CO₂/year)\n• LED bulbs everywhere → 75% less energy (~40 kg CO₂/year)\n• Thermostat adjustment (±2°F) → (~100 kg CO₂/year)\n• Unplug chargers when not in use → (~15 kg CO₂/year)\n\n🏠 Medium Impact (Save 30-50%):\n• Programmable thermostat → (~180 kg CO₂/year)\n• Weather-strip windows/doors → (~100 kg CO₂/year)\n• Energy-efficient appliances → (~200 kg CO₂/year)\n• Ceiling fans vs AC → (~120 kg CO₂/year)\n\n💡 Total Potential Savings: ~800 kg CO₂/year\n💵 Cost savings: ~$400-600/year on electricity bills\n\n${userContext ? `Your current energy footprint is ${energyFootprint.toFixed(1)} kg CO₂. With these optimizations, you could reduce it by 60-80%!` : ''}`;
+  }
+  
+  if (messageLower.includes('weekly') || messageLower.includes('week')) {
+    const weeklyEstimate = userContext ? (userContext.monthCarbon / 4).toFixed(1) : '15.0';
+    return `📊 Your Weekly Carbon Footprint:\n\n${userContext ? `Based on your tracking:\n• Weekly average: ~${weeklyEstimate} kg CO₂\n• Monthly total: ${userContext.monthCarbon.toFixed(1)} kg CO₂\n• Total tracked: ${userContext.totalCarbon.toFixed(1)} kg CO₂\n\nCategory Breakdown:\n• Transportation: ${(userContext.categoryBreakdown.transportation || 0).toFixed(1)} kg\n• Energy: ${(userContext.categoryBreakdown.energy || 0).toFixed(1)} kg\n• Food: ${(userContext.categoryBreakdown.food || 0).toFixed(1)} kg\n• Shopping: ${(userContext.categoryBreakdown.shopping || 0).toFixed(1)} kg` : 'Start tracking your carbon footprint to see your personalized weekly breakdown!'}\n\n🎯 Average American weekly footprint: ~192 kg CO₂\n${userContext && parseFloat(weeklyEstimate) < 192 ? '✅ You\'re doing better than average!' : '💡 Opportunity to improve!'}`;
+  }
+  
+  if (messageLower.includes('commute') || messageLower.includes('transport')) {
+    return `🚗 Transportation Carbon Tips:\n\n1. Carpool or vanpool → Save 50% of solo driving emissions\n2. Bike or walk for trips under 3 miles → Zero emissions\n3. Use public transit → 45% less CO₂ than driving\n4. Maintain proper tire pressure → Improve fuel efficiency by 3%\n5. Combine errands into one trip → Reduce cold starts\n\n${userContext ? `Your current transportation footprint is ${(userContext.categoryBreakdown.transportation || 0).toFixed(1)} kg CO₂.` : ''}`;
   }
   
   if (messageLower.includes('food') || messageLower.includes('eating') || messageLower.includes('diet')) {
-    return `For sustainable eating habits:\n\n1. Reduce meat consumption, especially beef\n2. Buy local and seasonal produce\n3. Plan meals to minimize food waste\n4. Compost food scraps when possible\n5. Choose products with minimal packaging\n\n${userContext ? `Your current food-related footprint is ${(userContext.categoryBreakdown.food || 0).toFixed(1)} kg CO₂.` : ''}`;
+    return `🥗 Sustainable Eating Strategies:\n\n1. Meatless Monday (or more) → Save ~15 kg CO₂/week\n2. Buy local and seasonal produce → 50% less transport emissions\n3. Plan meals to reduce waste → Save ~120 kg CO₂/year\n4. Compost food scraps → Save ~75 kg CO₂/year\n5. Choose minimal packaging → Reduce plastic waste\n\n${userContext ? `Your current food-related footprint is ${(userContext.categoryBreakdown.food || 0).toFixed(1)} kg CO₂.` : ''}`;
   }
   
-  if (messageLower.includes('product') || messageLower.includes('shopping') || messageLower.includes('buy')) {
-    return `For eco-friendly shopping:\n\n1. Choose quality items that last longer\n2. Buy second-hand when possible\n3. Support companies with sustainable practices\n4. Avoid single-use plastics\n5. Repair items instead of replacing them\n\n${userContext ? `Your current shopping footprint is ${(userContext.categoryBreakdown.shopping || 0).toFixed(1)} kg CO₂.` : ''}`;
-  }
-  
-  return `Here are some general tips to reduce your carbon footprint:\n\n1. Transportation: Use public transit, carpool, or bike when possible\n2. Energy: Switch to LED bulbs and unplug unused devices\n3. Food: Reduce meat consumption and buy local produce\n4. Shopping: Choose sustainable products and avoid single-use items\n5. Habits: Reduce, reuse, recycle in that order\n\n${userContext ? `Your total carbon footprint is ${userContext.totalCarbon.toFixed(1)} kg CO₂ (${userContext.monthCarbon.toFixed(1)} kg this month).` : ''}\n\nI'm here to help you reduce your environmental impact!`;
+  return `🌍 AI Carbon-Chat Agent Ready!\n\nI can help you with:\n\n🔢 Carbon Calculations:\n• "How much CO₂ will I save biking today?"\n• "Calculate my weekly footprint"\n• "Compare driving vs public transit"\n\n💰 Product Recommendations:\n• "Best sustainable products under $10"\n• "Eco-friendly alternatives for [item]"\n• "Most cost-effective green products"\n\n⚡ Optimization Advice:\n• "Optimize my home power usage"\n• "Reduce water consumption"\n• "Lower my energy bills"\n\n${userContext ? `\n📊 Your Current Stats:\n• Total: ${userContext.totalCarbon.toFixed(1)} kg CO₂\n• This month: ${userContext.monthCarbon.toFixed(1)} kg CO₂\n\nWhat would you like to know?` : '\n💡 Start tracking your carbon footprint for personalized advice!'}`;
 }
 
 export async function getProductRecommendations(
