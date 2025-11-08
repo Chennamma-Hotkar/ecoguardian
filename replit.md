@@ -21,7 +21,8 @@ EcoGuardian is a **complete and fully functional** full-stack web application de
 - Frontend: React with TypeScript, Vite build system
 - UI Framework: shadcn/ui components (Radix UI primitives) with Tailwind CSS
 - Backend: Express.js with TypeScript
-- Database: In-memory storage (MemStorage) for development
+- Database: PostgreSQL (Replit-hosted) with persistent storage
+- ORM: Drizzle ORM with node-postgres driver
 - AI Integration: OpenAI API for chatbot and recommendations (with graceful fallbacks)
 - State Management: TanStack Query (React Query)
 - Authentication: Express sessions with password hashing (scrypt)
@@ -47,6 +48,9 @@ Preferred communication style: Simple, everyday language.
 - ✅ Built Smart Analytics feature with 30-day trend analysis, category breakdowns, and AI-powered insights
 - ✅ Fixed analytics calculation accuracy to use consistent 30-day window for all metrics
 - ✅ Tested and verified Smart Analytics end-to-end with interactive charts and KPIs
+- ✅ Migrated from in-memory storage to persistent PostgreSQL database
+- ✅ Implemented DbStorage class using Drizzle ORM with node-postgres driver
+- ✅ Verified data persistence across server restarts and login/logout cycles
 
 ## System Architecture
 
@@ -95,7 +99,7 @@ Preferred communication style: Simple, everyday language.
 - Secure session cookies with httpOnly flag
 - Timing-safe password comparison to prevent timing attacks
 
-**Data Layer Abstraction**: `IStorage` interface pattern enabling multiple storage implementations (in-memory for development, database for production via Drizzle ORM)
+**Data Layer Abstraction**: `IStorage` interface pattern with `DbStorage` implementation using Drizzle ORM and node-postgres driver for persistent PostgreSQL storage
 
 ### Database Architecture
 
