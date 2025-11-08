@@ -11,6 +11,7 @@ EcoGuardian is a **complete and fully functional** full-stack web application de
 - Authentication system fully functional with secure password hashing
 - Carbon tracking with real-time statistics and data visualization
 - Smart Analytics with 30-day trends, AI insights, and interactive charts
+- AI Resource Wastage Forecaster with predictions for energy, water, and carbon consumption
 - AI chatbot with Server-Sent Events (SSE) streaming responses
 - AI-powered product recommendations with fallback content
 - Goal setting and tracking functionality
@@ -51,6 +52,10 @@ Preferred communication style: Simple, everyday language.
 - ✅ Migrated from in-memory storage to persistent PostgreSQL database
 - ✅ Implemented DbStorage class using Drizzle ORM with node-postgres driver
 - ✅ Verified data persistence across server restarts and login/logout cycles
+- ✅ Created AI Resource Wastage Forecaster with energy, water, and carbon predictions
+- ✅ Built prediction page with 7-day forecast charts and radar risk assessment
+- ✅ Added AI-powered insights and actionable recommendations
+- ✅ Tested predictions feature end-to-end with refresh functionality
 
 ## System Architecture
 
@@ -58,7 +63,7 @@ Preferred communication style: Simple, everyday language.
 
 **Component-Based Design**: The application follows a modular React component structure with clear separation of concerns:
 
-- **Page Components** (`client/src/pages/`): Top-level route components (Dashboard, Analytics, Calculator, Goals, Landing, Recommendations)
+- **Page Components** (`client/src/pages/`): Top-level route components (Dashboard, Analytics, Predictions, Calculator, Goals, Landing, Recommendations)
 - **Reusable Components** (`client/src/components/`): Self-contained UI modules (AuthForm, CarbonChart, ChatInterface, MapModule, ProductCard, etc.)
 - **UI Primitives** (`client/src/components/ui/`): shadcn/ui library components for consistent design system
 
@@ -83,6 +88,7 @@ Preferred communication style: Simple, everyday language.
 - `/api/carbon-entries` - CRUD operations for carbon footprint data
 - `/api/carbon-entries/stats` - Aggregated analytics
 - `/api/carbon-entries/analytics` - Advanced 30-day trend analysis with AI insights
+- `/api/predictions` - AI resource wastage forecasts (energy, water, carbon)
 - `/api/goals` - User carbon reduction goals
 - `/api/chat` - AI chatbot interactions
 - `/api/recommendations` - AI-generated product recommendations
@@ -147,6 +153,18 @@ Preferred communication style: Simple, everyday language.
 - Contextual prompts tailored to user's highest impact categories
 - **Fallback recommendations**: Category-specific product suggestions when API is unavailable
 - Error handling with graceful degradation
+
+**Resource Wastage Forecaster**:
+- Model: GPT-4o-mini for intelligent predictions
+- Analyzes user carbon data patterns (daily average, weekly total, category breakdown)
+- Predicts three metrics with trend analysis and confidence levels:
+  - Energy consumption spike probability (percentage)
+  - Water wastage likelihood (percentage)
+  - Carbon footprint forecast for next week (kg CO₂)
+- Generates AI insights identifying consumption patterns
+- Provides actionable recommendations to reduce resource wastage
+- **Fallback predictions**: Data-driven predictions using statistical analysis when API is unavailable
+- Temperature 0.3 for consistent, reliable forecasting
 
 **Design Rationale**: Separation of AI logic into dedicated module enables easier testing, API key management, and potential future migration to alternative AI providers. Fallback content ensures application remains functional even when OpenAI API is unavailable.
 
