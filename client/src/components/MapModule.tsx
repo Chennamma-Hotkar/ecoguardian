@@ -6,10 +6,18 @@ import { Search, MapPin, Recycle, Zap, ShoppingBag, Navigation } from "lucide-re
 import { useState } from "react";
 
 const locations = [
-  { id: 1, name: "GreenCharge Station", type: "charging", distance: "0.3 mi", rating: 4.8, address: "123 Main St" },
-  { id: 2, name: "EcoRecycle Center", type: "recycling", distance: "0.5 mi", rating: 4.6, address: "456 Oak Ave" },
-  { id: 3, name: "Organic Market", type: "market", distance: "0.7 mi", rating: 4.9, address: "789 Green Blvd" },
-  { id: 4, name: "Solar Hub", type: "charging", distance: "1.2 mi", rating: 4.7, address: "321 Energy Ln" },
+  { id: 1, name: "GreenCharge Station", type: "charging", distance: "0.3 mi", rating: 4.8, address: "123 Main St", hours: "24/7" },
+  { id: 2, name: "EcoRecycle Center", type: "recycling", distance: "0.5 mi", rating: 4.6, address: "456 Oak Ave", hours: "Mon-Sat 8AM-6PM" },
+  { id: 3, name: "Organic Farmers Market", type: "market", distance: "0.7 mi", rating: 4.9, address: "789 Green Blvd", hours: "Daily 7AM-8PM" },
+  { id: 4, name: "Solar Hub EV Charging", type: "charging", distance: "1.2 mi", rating: 4.7, address: "321 Energy Ln", hours: "24/7" },
+  { id: 5, name: "Zero Waste Store", type: "market", distance: "0.9 mi", rating: 4.8, address: "555 Eco Way", hours: "Mon-Sun 9AM-7PM" },
+  { id: 6, name: "Community Composting", type: "recycling", distance: "1.5 mi", rating: 4.5, address: "888 Nature Dr", hours: "Tue-Sun 7AM-5PM" },
+  { id: 7, name: "Tesla Supercharger", type: "charging", distance: "2.1 mi", rating: 4.9, address: "999 Tech Pkwy", hours: "24/7" },
+  { id: 8, name: "Whole Foods Co-op", type: "market", distance: "1.8 mi", rating: 4.7, address: "222 Local St", hours: "Daily 8AM-9PM" },
+  { id: 9, name: "Electronics Recycling Drop-off", type: "recycling", distance: "2.3 mi", rating: 4.4, address: "444 Recycle Rd", hours: "Wed-Sat 10AM-4PM" },
+  { id: 10, name: "Fast Charge Station", type: "charging", distance: "0.4 mi", rating: 4.6, address: "111 Power Ave", hours: "24/7" },
+  { id: 11, name: "Sustainable Marketplace", type: "market", distance: "1.1 mi", rating: 4.8, address: "666 Earth Ln", hours: "Daily 9AM-8PM" },
+  { id: 12, name: "Battery Recycling Center", type: "recycling", distance: "3.0 mi", rating: 4.7, address: "777 Clean St", hours: "Mon-Fri 9AM-5PM" },
 ];
 
 const typeIcons = {
@@ -105,9 +113,10 @@ export default function MapModule() {
                     <div className="flex-1 min-w-0">
                       <h4 className="font-semibold">{location.name}</h4>
                       <p className="text-sm text-muted-foreground">{location.address}</p>
-                      <div className="flex items-center gap-3 mt-1">
+                      <div className="flex items-center gap-3 mt-1 flex-wrap">
                         <span className="text-xs">⭐ {location.rating}</span>
                         <span className="text-xs text-muted-foreground">{location.distance}</span>
+                        <span className="text-xs text-muted-foreground">• {(location as any).hours}</span>
                       </div>
                     </div>
                     <Button size="icon" variant="outline" data-testid={`button-navigate-${location.id}`}>
