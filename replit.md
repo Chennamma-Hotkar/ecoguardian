@@ -13,6 +13,7 @@ EcoGuardian is a full-stack web application designed to help users track, analyz
 - Eco-Route Navigator for optimized routes showing fuel/CO₂ savings.
 - AI Room Redesign with generative image visualizations and sustainable product recommendations.
 - AI Carbon-Chat Agent with specialized capabilities: carbon savings calculations, budget product recommendations, and power optimization advice.
+- Comprehensive Learn More page showcasing all features, technology stack, and benefits.
 - AI-powered product recommendations and goal setting.
 - Responsive design with light/dark theme support.
 - Professional footer with brand information, navigation links, resources, and social media connections.
