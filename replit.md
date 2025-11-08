@@ -12,7 +12,7 @@ EcoGuardian is a full-stack web application designed to help users track, analyz
 - AI Resource Wastage Forecaster for energy, water, and carbon consumption predictions.
 - Eco-Route Navigator for optimized routes showing fuel/CO₂ savings.
 - AI Room Redesign with generative image visualizations and sustainable product recommendations.
-- AI chatbot with Server-Sent Events (SSE) streaming responses.
+- AI Carbon-Chat Agent with specialized capabilities: carbon savings calculations, budget product recommendations, and power optimization advice.
 - AI-powered product recommendations and goal setting.
 - Responsive design with light/dark theme support.
 
@@ -37,7 +37,7 @@ PostgreSQL is the primary database, utilizing Drizzle ORM for type-safe operatio
 ### AI Integration Architecture
 
 AI integration is centralized in a dedicated service layer (`server/ai.ts`) using OpenAI's GPT-4o-mini model. This includes:
-- **Chatbot**: Context-aware, streaming responses via SSE with graceful fallbacks.
+- **AI Carbon-Chat Agent**: Intelligent chatbot providing context-aware responses for carbon calculations (bicycle savings), budget product recommendations, and home power optimization. Uses user's actual tracking data for personalized advice. SSE streaming with comprehensive fallback responses.
 - **Recommendation Engine**: Personalized product suggestions based on carbon footprint, with fallback content.
 - **Resource Wastage Forecaster**: Predicts energy, water, and carbon consumption, offering actionable insights and fallback predictions via statistical analysis.
 - **Room Redesign Visualizer**: Generates sustainable interior design recommendations and leverages pre-generated photorealistic images for visualization, with comprehensive fallback recommendations.
