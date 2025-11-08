@@ -185,6 +185,107 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  app.get("/api/carbon-entries/analytics", requireAuth, async (req: Request, res: Response) => {
+    try {
+      const entries = await storage.getCarbonEntriesByUser(req.session.userId!);
+      
+      const now = new Date();
+      const thirtyDaysAgo = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
+      const sevenDaysAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
+      
+      const last30Days = entries.filter(e => e.date >= thirtyDaysAgo);
+      const last7Days = entries.filter(e => e.date >= sevenDaysAgo);
+      const previousWeek = entries.filter(e => {
+        const fourteenDaysAgo = new Date(now.getTime() - 14 * 24 * 60 * 60 * 1000);
+        return e.date >= fourteenDaysAgo && e.date < sevenDaysAgo;
+      });
+
+      const dailyTotals: Array<{ date: string; amount: number }> = [];
+      const dailyMap: Record<string, number> = {};
+      
+      for (let i = 0; i <= 29; i++) {
+        const date = new Date(now.getTime() - i * 24 * 60 * 60 * 1000);
+        const dateKey = date.toISOString().split('T')[0];
+        dailyMap[dateKey] = 0;
+      }
+      
+      last30Days.forEach(entry => {
+        const dateKey = entry.date.toISOString().split('T')[0];
+        if (dateKey in dailyMap) {
+          dailyMap[dateKey] += entry.amount;
+        }
+      });
+      
+      Object.entries(dailyMap)
+        .sort(([a], [b]) => a.localeCompare(b))
+        .forEach(([date, amount]) => {
+          dailyTotals.push({ date, amount });
+        });
+
+      const categoryTrends: Record<string, Array<{ date: string; amount: number }>> = {
+        transportation: [],
+        energy: [],
+        food: [],
+        shopping: [],
+      };
+      
+      ['transportation', 'energy', 'food', 'shopping'].forEach(category => {
+        const categoryMap: Record<string, number> = {};
+        
+        for (let i = 0; i <= 29; i++) {
+          const date = new Date(now.getTime() - i * 24 * 60 * 60 * 1000);
+          const dateKey = date.toISOString().split('T')[0];
+          categoryMap[dateKey] = 0;
+        }
+        
+        last30Days
+          .filter(e => e.category === category)
+          .forEach(entry => {
+            const dateKey = entry.date.toISOString().split('T')[0];
+            if (dateKey in categoryMap) {
+              categoryMap[dateKey] += entry.amount;
+            }
+          });
+        
+        Object.entries(categoryMap)
+          .sort(([a], [b]) => a.localeCompare(b))
+          .forEach(([date, amount]) => {
+            categoryTrends[category].push({ date, amount });
+          });
+      });
+
+      const thisWeekTotal = last7Days.reduce((sum, e) => sum + e.amount, 0);
+      const lastWeekTotal = previousWeek.reduce((sum, e) => sum + e.amount, 0);
+      const weekOverWeekChange = lastWeekTotal > 0 
+        ? ((thisWeekTotal - lastWeekTotal) / lastWeekTotal) * 100 
+        : 0;
+
+      const categoryBreakdown30Days = last30Days.reduce((acc, entry) => {
+        acc[entry.category] = (acc[entry.category] || 0) + entry.amount;
+        return acc;
+      }, {} as Record<string, number>);
+
+      const topCategory = Object.entries(categoryBreakdown30Days)
+        .sort(([, a], [, b]) => b - a)[0];
+
+      res.json({
+        dailyTotals,
+        categoryTrends,
+        weekOverWeekChange,
+        thisWeekTotal,
+        lastWeekTotal,
+        topCategory: topCategory ? { category: topCategory[0], amount: topCategory[1] } : null,
+        totalEntries: entries.length,
+        averageDaily: last30Days.length > 0 
+          ? last30Days.reduce((sum, e) => sum + e.amount, 0) / 30 
+          : 0,
+      });
+    } catch (error) {
+      console.error("Get analytics error:", error);
+      res.status(500).json({ error: "Internal server error" });
+    }
+  });
+
   app.post("/api/goals", requireAuth, async (req: Request, res: Response) => {
     try {
       const result = insertGoalSchema.safeParse({

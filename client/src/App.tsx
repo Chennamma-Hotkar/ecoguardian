@@ -11,6 +11,7 @@ import Dashboard from "@/pages/Dashboard";
 import Calculator from "@/pages/Calculator";
 import Goals from "@/pages/Goals";
 import Recommendations from "@/pages/Recommendations";
+import Analytics from "@/pages/Analytics";
 import AuthForm from "@/components/AuthForm";
 import MapModule from "@/components/MapModule";
 import ChatInterface from "@/components/ChatInterface";
@@ -95,6 +96,9 @@ function AppContent() {
             <Switch>
               <Route path="/dashboard">
                 <Dashboard />
+              </Route>
+              <Route path="/analytics">
+                <Analytics />
               </Route>
               <Route path="/calculator">
                 <Calculator />
