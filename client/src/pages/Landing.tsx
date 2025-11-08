@@ -1,6 +1,7 @@
 import HeroSection from "@/components/HeroSection";
 import FeatureSection from "@/components/FeatureSection";
 import ProductCard from "@/components/ProductCard";
+import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Quote } from "lucide-react";
@@ -146,11 +147,7 @@ export default function Landing({ onGetStarted }: LandingProps) {
         </div>
       </section>
 
-      <footer className="py-8 px-4 border-t">
-        <div className="max-w-7xl mx-auto text-center text-sm text-muted-foreground">
-          <p>© 2024 EcoGuardian. All rights reserved.</p>
-        </div>
-      </footer>
+      <Footer />
     </div>
   );
 }

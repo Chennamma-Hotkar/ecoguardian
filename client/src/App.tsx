@@ -6,6 +6,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/app-sidebar";
 import ThemeToggle from "@/components/ThemeToggle";
+import Footer from "@/components/Footer";
 import Landing from "@/pages/Landing";
 import Dashboard from "@/pages/Dashboard";
 import Calculator from "@/pages/Calculator";
@@ -94,86 +95,91 @@ function AppContent() {
             <SidebarTrigger data-testid="button-sidebar-toggle" />
             <ThemeToggle />
           </header>
-          <main className="flex-1 overflow-auto p-6">
-            <Switch>
-              <Route path="/dashboard">
-                <Dashboard />
-              </Route>
-              <Route path="/analytics">
-                <Analytics />
-              </Route>
-              <Route path="/predictions">
-                <Predictions />
-              </Route>
-              <Route path="/eco-route">
-                <EcoRoute />
-              </Route>
-              <Route path="/calculator">
-                <Calculator />
-              </Route>
-              <Route path="/goals">
-                <Goals />
-              </Route>
-              <Route path="/recommendations">
-                <Recommendations />
-              </Route>
-              <Route path="/map">
-                <div className="space-y-6">
-                  <h1 className="text-3xl font-bold">Eco-Friendly Locations</h1>
-                  <MapModule />
-                </div>
-              </Route>
-              <Route path="/chat">
-                <div className="space-y-6">
-                  <h1 className="text-3xl font-bold">AI Carbon-Chat Agent</h1>
-                  <p className="text-muted-foreground">Get instant answers about carbon savings, sustainable products, and optimization strategies</p>
-                  <ChatInterface />
-                </div>
-              </Route>
-              <Route path="/products">
-                <div className="space-y-6">
-                  <h1 className="text-3xl font-bold">Sustainable Products</h1>
-                  <p className="text-muted-foreground">Discover eco-friendly alternatives for your lifestyle</p>
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                    <ProductCard
-                      image={bottleImage}
-                      name="Eco Steel Bottle"
-                      price="$24.99"
-                      carbonSaving="12 kg"
-                      ecoScore={9}
-                      category="Reusables"
-                    />
-                    <ProductCard
-                      image={toothbrushImage}
-                      name="Bamboo Brush Set"
-                      price="$12.99"
-                      carbonSaving="3 kg"
-                      ecoScore={8}
-                      category="Personal Care"
-                    />
-                    <ProductCard
-                      image={bagImage}
-                      name="Organic Cotton Bag"
-                      price="$15.99"
-                      carbonSaving="8 kg"
-                      ecoScore={9}
-                      category="Shopping"
-                    />
-                    <ProductCard
-                      image={chargerImage}
-                      name="Solar Power Bank"
-                      price="$39.99"
-                      carbonSaving="15 kg"
-                      ecoScore={10}
-                      category="Electronics"
-                    />
-                  </div>
-                </div>
-              </Route>
-              <Route path="/">
-                <Dashboard />
-              </Route>
-            </Switch>
+          <main className="flex-1 overflow-auto">
+            <div className="min-h-full flex flex-col">
+              <div className="flex-1 p-6">
+                <Switch>
+                  <Route path="/dashboard">
+                    <Dashboard />
+                  </Route>
+                  <Route path="/analytics">
+                    <Analytics />
+                  </Route>
+                  <Route path="/predictions">
+                    <Predictions />
+                  </Route>
+                  <Route path="/eco-route">
+                    <EcoRoute />
+                  </Route>
+                  <Route path="/calculator">
+                    <Calculator />
+                  </Route>
+                  <Route path="/goals">
+                    <Goals />
+                  </Route>
+                  <Route path="/recommendations">
+                    <Recommendations />
+                  </Route>
+                  <Route path="/map">
+                    <div className="space-y-6">
+                      <h1 className="text-3xl font-bold">Eco-Friendly Locations</h1>
+                      <MapModule />
+                    </div>
+                  </Route>
+                  <Route path="/chat">
+                    <div className="space-y-6">
+                      <h1 className="text-3xl font-bold">AI Carbon-Chat Agent</h1>
+                      <p className="text-muted-foreground">Get instant answers about carbon savings, sustainable products, and optimization strategies</p>
+                      <ChatInterface />
+                    </div>
+                  </Route>
+                  <Route path="/products">
+                    <div className="space-y-6">
+                      <h1 className="text-3xl font-bold">Sustainable Products</h1>
+                      <p className="text-muted-foreground">Discover eco-friendly alternatives for your lifestyle</p>
+                      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                        <ProductCard
+                          image={bottleImage}
+                          name="Eco Steel Bottle"
+                          price="$24.99"
+                          carbonSaving="12 kg"
+                          ecoScore={9}
+                          category="Reusables"
+                        />
+                        <ProductCard
+                          image={toothbrushImage}
+                          name="Bamboo Brush Set"
+                          price="$12.99"
+                          carbonSaving="3 kg"
+                          ecoScore={8}
+                          category="Personal Care"
+                        />
+                        <ProductCard
+                          image={bagImage}
+                          name="Organic Cotton Bag"
+                          price="$15.99"
+                          carbonSaving="8 kg"
+                          ecoScore={9}
+                          category="Shopping"
+                        />
+                        <ProductCard
+                          image={chargerImage}
+                          name="Solar Power Bank"
+                          price="$39.99"
+                          carbonSaving="15 kg"
+                          ecoScore={10}
+                          category="Electronics"
+                        />
+                      </div>
+                    </div>
+                  </Route>
+                  <Route path="/">
+                    <Dashboard />
+                  </Route>
+                </Switch>
+              </div>
+              <Footer />
+            </div>
           </main>
         </div>
       </div>

@@ -15,6 +15,7 @@ EcoGuardian is a full-stack web application designed to help users track, analyz
 - AI Carbon-Chat Agent with specialized capabilities: carbon savings calculations, budget product recommendations, and power optimization advice.
 - AI-powered product recommendations and goal setting.
 - Responsive design with light/dark theme support.
+- Professional footer with brand information, navigation links, resources, and social media connections.
 
 ## User Preferences
 
