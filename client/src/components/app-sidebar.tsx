@@ -1,4 +1,4 @@
-import { Home, BarChart3, Calculator, Map, MessageSquare, ShoppingBag, Settings, Leaf } from "lucide-react";
+import { Home, Calculator, Map, MessageSquare, ShoppingBag, Leaf, Target, Sparkles } from "lucide-react";
 import {
   Sidebar,
   SidebarContent,
@@ -15,12 +15,12 @@ import { Card, CardContent } from "@/components/ui/card";
 
 const menuItems = [
   { title: "Dashboard", url: "/dashboard", icon: Home },
-  { title: "Analytics", url: "/analytics", icon: BarChart3 },
   { title: "Calculator", url: "/calculator", icon: Calculator },
+  { title: "Goals", url: "/goals", icon: Target },
   { title: "Eco Map", url: "/map", icon: Map },
   { title: "AI Assistant", url: "/chat", icon: MessageSquare },
+  { title: "Recommendations", url: "/recommendations", icon: Sparkles },
   { title: "Products", url: "/products", icon: ShoppingBag },
-  { title: "Settings", url: "/settings", icon: Settings },
 ];
 
 export function AppSidebar() {
