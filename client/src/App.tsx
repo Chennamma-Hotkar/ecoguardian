@@ -8,6 +8,7 @@ import { AppSidebar } from "@/components/app-sidebar";
 import ThemeToggle from "@/components/ThemeToggle";
 import Footer from "@/components/Footer";
 import Landing from "@/pages/Landing";
+import LearnMore from "@/pages/LearnMore";
 import Dashboard from "@/pages/Dashboard";
 import Calculator from "@/pages/Calculator";
 import Goals from "@/pages/Goals";
@@ -52,11 +53,19 @@ function AppContent() {
     );
   }
 
-  if (!user && location !== "/" && location !== "/auth") {
+  if (!user && location !== "/" && location !== "/auth" && location !== "/learn-more") {
     return (
       <Switch>
         <Route path="/auth">
           <AuthForm onAuthSuccess={handleAuthSuccess} />
+        </Route>
+        <Route path="/learn-more">
+          <div className="min-h-screen flex flex-col">
+            <div className="flex-1">
+              <LearnMore />
+            </div>
+            <Footer />
+          </div>
         </Route>
         <Route path="/">
           <Landing onGetStarted={handleGetStarted} />
@@ -70,6 +79,14 @@ function AppContent() {
       <Switch>
         <Route path="/auth">
           <AuthForm onAuthSuccess={handleAuthSuccess} />
+        </Route>
+        <Route path="/learn-more">
+          <div className="min-h-screen flex flex-col">
+            <div className="flex-1">
+              <LearnMore />
+            </div>
+            <Footer />
+          </div>
         </Route>
         <Route path="/">
           <Landing onGetStarted={handleGetStarted} />
@@ -172,6 +189,9 @@ function AppContent() {
                         />
                       </div>
                     </div>
+                  </Route>
+                  <Route path="/learn-more">
+                    <LearnMore />
                   </Route>
                   <Route path="/">
                     <Dashboard />

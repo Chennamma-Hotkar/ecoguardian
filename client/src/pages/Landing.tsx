@@ -5,6 +5,7 @@ import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Quote } from "lucide-react";
+import { useLocation } from "wouter";
 import bottleImage from "@assets/generated_images/Reusable_water_bottle_product_3de846b6.png";
 import toothbrushImage from "@assets/generated_images/Bamboo_toothbrush_product_716afcae.png";
 import bagImage from "@assets/generated_images/Reusable_shopping_bag_product_5094c408.png";
@@ -15,6 +16,8 @@ interface LandingProps {
 }
 
 export default function Landing({ onGetStarted }: LandingProps) {
+  const [, setLocation] = useLocation();
+  
   return (
     <div className="min-h-screen">
       <HeroSection onGetStarted={onGetStarted} />
@@ -135,15 +138,25 @@ export default function Landing({ onGetStarted }: LandingProps) {
           <p className="text-xl opacity-90">
             Join 150,000+ users taking action against climate change
           </p>
-          <Button 
-            size="lg" 
-            variant="secondary"
-            className="mt-6"
-            onClick={onGetStarted}
-            data-testid="button-cta-bottom"
-          >
-            Start Tracking Free
-          </Button>
+          <div className="flex flex-wrap gap-4 justify-center mt-6">
+            <Button 
+              size="lg" 
+              variant="secondary"
+              onClick={onGetStarted}
+              data-testid="button-cta-bottom"
+            >
+              Start Tracking Free
+            </Button>
+            <Button 
+              size="lg" 
+              variant="outline"
+              className="bg-white/10 hover:bg-white/20 border-white/20"
+              onClick={() => setLocation("/learn-more")}
+              data-testid="button-learn-more-cta"
+            >
+              Learn More
+            </Button>
+          </div>
         </div>
       </section>
 
