@@ -34,7 +34,11 @@ const features = [
   },
 ];
 
-export default function FeatureSection() {
+interface FeatureSectionProps {
+  onFeatureClick?: () => void;
+}
+
+export default function FeatureSection({ onFeatureClick }: FeatureSectionProps) {
   return (
     <section className="py-16 px-4">
       <div className="max-w-7xl mx-auto">
@@ -49,7 +53,12 @@ export default function FeatureSection() {
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {features.map((feature, index) => (
-            <Card key={index} className="hover-elevate cursor-pointer" data-testid={`feature-card-${index}`}>
+            <Card 
+              key={index} 
+              className="hover-elevate active-elevate-2 cursor-pointer" 
+              onClick={onFeatureClick}
+              data-testid={`feature-${feature.title.toLowerCase().replace(/\s+/g, '-')}`}
+            >
               <CardContent className="p-6 space-y-3">
                 <div className="h-12 w-12 rounded-full bg-primary/10 flex items-center justify-center">
                   <feature.icon className="h-6 w-6 text-primary" />

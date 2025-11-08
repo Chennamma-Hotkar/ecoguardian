@@ -13,9 +13,10 @@ import chargerImage from "@assets/generated_images/Solar_charger_product_34767e1
 
 interface LandingProps {
   onGetStarted?: () => void;
+  onFeatureClick?: () => void;
 }
 
-export default function Landing({ onGetStarted }: LandingProps) {
+export default function Landing({ onGetStarted, onFeatureClick }: LandingProps) {
   const [, setLocation] = useLocation();
   
   return (
@@ -56,7 +57,7 @@ export default function Landing({ onGetStarted }: LandingProps) {
         </div>
       </section>
 
-      <FeatureSection />
+      <FeatureSection onFeatureClick={onFeatureClick} />
 
       <section className="py-16 px-4 bg-muted/30">
         <div className="max-w-7xl mx-auto">

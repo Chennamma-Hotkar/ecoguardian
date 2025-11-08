@@ -46,6 +46,11 @@ function AppContent() {
     setLocation("/auth");
   };
 
+  const handleFeatureClick = () => {
+    sessionStorage.setItem("redirectAfterAuth", "/dashboard");
+    setLocation("/auth");
+  };
+
   if (isLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
@@ -72,7 +77,7 @@ function AppContent() {
           </div>
         </Route>
         <Route path="/">
-          <Landing onGetStarted={handleGetStarted} />
+          <Landing onGetStarted={handleGetStarted} onFeatureClick={handleFeatureClick} />
         </Route>
       </Switch>
     );
@@ -93,10 +98,10 @@ function AppContent() {
           </div>
         </Route>
         <Route path="/">
-          <Landing onGetStarted={handleGetStarted} />
+          <Landing onGetStarted={handleGetStarted} onFeatureClick={handleFeatureClick} />
         </Route>
         <Route>
-          <Landing onGetStarted={handleGetStarted} />
+          <Landing onGetStarted={handleGetStarted} onFeatureClick={handleFeatureClick} />
         </Route>
       </Switch>
     );
