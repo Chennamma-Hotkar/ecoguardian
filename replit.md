@@ -13,6 +13,7 @@ EcoGuardian is a **complete and fully functional** full-stack web application de
 - Smart Analytics with 30-day trends, AI insights, and interactive charts
 - AI Resource Wastage Forecaster with predictions for energy, water, and carbon consumption
 - Eco-Route Navigator with route optimization showing fuel/CO₂ savings
+- AI Room Redesign with generative image visualizations and sustainable product recommendations
 - AI chatbot with Server-Sent Events (SSE) streaming responses
 - AI-powered product recommendations with fallback content
 - Goal setting and tracking functionality
@@ -61,6 +62,11 @@ Preferred communication style: Simple, everyday language.
 - ✅ Created interactive SVG map visualization with waypoints
 - ✅ Implemented route comparison showing 25-31% fuel savings
 - ✅ Tested route calculator end-to-end with multiple location combinations
+- ✅ Built AI Room Redesign feature with generative image visualizations
+- ✅ Generated 4 photorealistic sustainable room images (bedroom, living room, kitchen, office)
+- ✅ Created AI function for sustainable product recommendations based on room type
+- ✅ Enhanced Recommendations page with tabbed UI (Carbon-Based and Room Redesign)
+- ✅ Tested room redesign end-to-end with multiple room types
 
 ## System Architecture
 
@@ -95,6 +101,7 @@ Preferred communication style: Simple, everyday language.
 - `/api/carbon-entries/analytics` - Advanced 30-day trend analysis with AI insights
 - `/api/predictions` - AI resource wastage forecasts (energy, water, carbon)
 - `/api/eco-route` - Eco-friendly route calculations with fuel/CO₂ savings
+- `/api/room-redesign` - AI room redesign with sustainable recommendations and visualizations
 - `/api/goals` - User carbon reduction goals
 - `/api/chat` - AI chatbot interactions
 - `/api/recommendations` - AI-generated product recommendations
@@ -171,6 +178,21 @@ Preferred communication style: Simple, everyday language.
 - Provides actionable recommendations to reduce resource wastage
 - **Fallback predictions**: Data-driven predictions using statistical analysis when API is unavailable
 - Temperature 0.3 for consistent, reliable forecasting
+
+**Room Redesign Visualizer**:
+- Model: GPT-4o-mini for sustainable interior design recommendations
+- Accepts user's natural language room redesign requests
+- Generates 4-5 specific, actionable sustainable product recommendations
+- Identifies room type (bedroom, living_room, kitchen, office, general) from user input
+- Returns structured JSON response with recommendations and room classification
+- **Pre-generated AI images**: 4 photorealistic sustainable room visualizations created with generative AI:
+  - Sustainable bedroom with recycled wood furniture and solar lamps
+  - Eco-friendly living room with organic fabrics and natural materials
+  - Green kitchen with bamboo countertops and energy-efficient appliances
+  - Sustainable home office with reclaimed wood and air-purifying plants
+- **Fallback recommendations**: Comprehensive room-specific product suggestions for all room types when API is unavailable
+- Temperature 0.8 for creative design suggestions
+- Frontend displays both AI-generated image visualization and text recommendations
 
 **Design Rationale**: Separation of AI logic into dedicated module enables easier testing, API key management, and potential future migration to alternative AI providers. Fallback content ensures application remains functional even when OpenAI API is unavailable.
 
