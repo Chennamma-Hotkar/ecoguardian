@@ -10,6 +10,7 @@ EcoGuardian is a **complete and fully functional** full-stack web application de
 - All core features implemented and tested
 - Authentication system fully functional with secure password hashing
 - Carbon tracking with real-time statistics and data visualization
+- Smart Analytics with 30-day trends, AI insights, and interactive charts
 - AI chatbot with Server-Sent Events (SSE) streaming responses
 - AI-powered product recommendations with fallback content
 - Goal setting and tracking functionality
@@ -43,6 +44,9 @@ Preferred communication style: Simple, everyday language.
 - ✅ Added graceful fallback responses when OpenAI API quota is exceeded
 - ✅ Verified login/signup forms accept text input correctly without overlays or blocking
 - ✅ Completed end-to-end testing of authentication, carbon tracking, AI chat, and goals
+- ✅ Built Smart Analytics feature with 30-day trend analysis, category breakdowns, and AI-powered insights
+- ✅ Fixed analytics calculation accuracy to use consistent 30-day window for all metrics
+- ✅ Tested and verified Smart Analytics end-to-end with interactive charts and KPIs
 
 ## System Architecture
 
@@ -50,7 +54,7 @@ Preferred communication style: Simple, everyday language.
 
 **Component-Based Design**: The application follows a modular React component structure with clear separation of concerns:
 
-- **Page Components** (`client/src/pages/`): Top-level route components (Dashboard, Calculator, Goals, Landing, Recommendations)
+- **Page Components** (`client/src/pages/`): Top-level route components (Dashboard, Analytics, Calculator, Goals, Landing, Recommendations)
 - **Reusable Components** (`client/src/components/`): Self-contained UI modules (AuthForm, CarbonChart, ChatInterface, MapModule, ProductCard, etc.)
 - **UI Primitives** (`client/src/components/ui/`): shadcn/ui library components for consistent design system
 
@@ -74,6 +78,7 @@ Preferred communication style: Simple, everyday language.
 - `/api/auth/*` - Authentication (signup, login, session management)
 - `/api/carbon-entries` - CRUD operations for carbon footprint data
 - `/api/carbon-entries/stats` - Aggregated analytics
+- `/api/carbon-entries/analytics` - Advanced 30-day trend analysis with AI insights
 - `/api/goals` - User carbon reduction goals
 - `/api/chat` - AI chatbot interactions
 - `/api/recommendations` - AI-generated product recommendations
@@ -182,6 +187,9 @@ Preferred communication style: Simple, everyday language.
 **shadcn/ui**: Pre-styled component library built on Radix UI with Tailwind CSS integration
 
 **Recharts**: Data visualization library for carbon footprint charts with responsive container support
+  - LineChart for 30-day emission trends
+  - BarChart for category breakdowns
+  - Responsive containers with CartesianGrid, Tooltips, and Legends
 
 ### Key NPM Packages
 
