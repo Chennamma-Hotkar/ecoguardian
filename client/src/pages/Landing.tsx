@@ -4,6 +4,7 @@ import ProductCard from "@/components/ProductCard";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Quote } from "lucide-react";
 import { useLocation } from "wouter";
 import bottleImage from "@assets/generated_images/Reusable_water_bottle_product_3de846b6.png";
@@ -117,17 +118,24 @@ export default function Landing({ onGetStarted, onFeatureClick }: LandingProps) 
           
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {[
-              { name: "Sarah Chen", role: "Environmental Advocate", quote: "EcoGuardian helped me reduce my carbon footprint by 40% in just 3 months. The AI recommendations are spot-on!" },
-              { name: "Michael Torres", role: "Tech Professional", quote: "The map feature is incredible. I've discovered so many eco-friendly businesses I never knew existed in my area." },
-              { name: "Emma Watson", role: "Sustainability Consultant", quote: "Finally, a carbon tracking app that's both powerful and easy to use. The chatbot answers all my questions instantly." },
+              { name: "Sarah Chen", role: "Environmental Advocate", quote: "EcoGuardian helped me reduce my carbon footprint by 40% in just 3 months. The AI recommendations are spot-on!", initials: "SC" },
+              { name: "Michael Torres", role: "Tech Professional", quote: "The map feature is incredible. I've discovered so many eco-friendly businesses I never knew existed in my area.", initials: "MT" },
+              { name: "Emma Watson", role: "Sustainability Consultant", quote: "Finally, a carbon tracking app that's both powerful and easy to use. The chatbot answers all my questions instantly.", initials: "EW" },
             ].map((testimonial, idx) => (
               <Card key={idx} className="hover-elevate">
                 <CardContent className="p-6 space-y-4">
                   <Quote className="h-8 w-8 text-primary/30" />
                   <p className="text-muted-foreground italic">"{testimonial.quote}"</p>
-                  <div>
-                    <div className="font-semibold">{testimonial.name}</div>
-                    <div className="text-sm text-muted-foreground">{testimonial.role}</div>
+                  <div className="flex items-center gap-3">
+                    <Avatar className="h-10 w-10">
+                      <AvatarFallback className="bg-primary/10 text-primary font-semibold">
+                        {testimonial.initials}
+                      </AvatarFallback>
+                    </Avatar>
+                    <div>
+                      <div className="font-semibold">{testimonial.name}</div>
+                      <div className="text-sm text-muted-foreground">{testimonial.role}</div>
+                    </div>
                   </div>
                 </CardContent>
               </Card>
