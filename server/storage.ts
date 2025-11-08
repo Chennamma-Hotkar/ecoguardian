@@ -1,5 +1,8 @@
-import { type User, type InsertUser, type CarbonEntry, type InsertCarbonEntry, type Goal, type InsertGoal } from "@shared/schema";
+import { type User, type InsertUser, type CarbonEntry, type InsertCarbonEntry, type Goal, type InsertGoal, users, carbonEntries, goals } from "@shared/schema";
 import { randomUUID } from "crypto";
+import { drizzle } from "drizzle-orm/neon-serverless";
+import { Pool } from "@neondatabase/serverless";
+import { eq, and, gte, lte, desc } from "drizzle-orm";
 
 export interface IStorage {
   getUser(id: string): Promise<User | undefined>;
@@ -94,4 +97,86 @@ export class MemStorage implements IStorage {
   }
 }
 
-export const storage = new MemStorage();
+export class DbStorage implements IStorage {
+  private db;
+
+  constructor() {
+    const connectionString = process.env.DATABASE_URL;
+    if (!connectionString) {
+      throw new Error("DATABASE_URL environment variable is not set");
+    }
+    const pool = new Pool({ connectionString });
+    this.db = drizzle(pool);
+  }
+
+  async getUser(id: string): Promise<User | undefined> {
+    const result = await this.db.select().from(users).where(eq(users.id, id)).limit(1);
+    return result[0];
+  }
+
+  async getUserByUsername(username: string): Promise<User | undefined> {
+    const result = await this.db.select().from(users).where(eq(users.username, username)).limit(1);
+    return result[0];
+  }
+
+  async createUser(insertUser: InsertUser): Promise<User> {
+    const result = await this.db.insert(users).values(insertUser).returning();
+    return result[0];
+  }
+
+  async createCarbonEntry(insertEntry: InsertCarbonEntry): Promise<CarbonEntry> {
+    const result = await this.db.insert(carbonEntries).values(insertEntry).returning();
+    return result[0];
+  }
+
+  async getCarbonEntriesByUser(userId: string): Promise<CarbonEntry[]> {
+    return await this.db
+      .select()
+      .from(carbonEntries)
+      .where(eq(carbonEntries.userId, userId))
+      .orderBy(desc(carbonEntries.date));
+  }
+
+  async getCarbonEntriesByUserAndDateRange(
+    userId: string,
+    startDate: Date,
+    endDate: Date
+  ): Promise<CarbonEntry[]> {
+    return await this.db
+      .select()
+      .from(carbonEntries)
+      .where(
+        and(
+          eq(carbonEntries.userId, userId),
+          gte(carbonEntries.date, startDate),
+          lte(carbonEntries.date, endDate)
+        )
+      )
+      .orderBy(desc(carbonEntries.date));
+  }
+
+  async createGoal(insertGoal: InsertGoal): Promise<Goal> {
+    const result = await this.db.insert(goals).values(insertGoal).returning();
+    return result[0];
+  }
+
+  async getGoalsByUser(userId: string): Promise<Goal[]> {
+    return await this.db
+      .select()
+      .from(goals)
+      .where(eq(goals.userId, userId))
+      .orderBy(desc(goals.createdAt));
+  }
+
+  async getActiveGoalByUser(userId: string): Promise<Goal | undefined> {
+    const result = await this.db
+      .select()
+      .from(goals)
+      .where(eq(goals.userId, userId))
+      .orderBy(desc(goals.createdAt))
+      .limit(1);
+    return result[0];
+  }
+}
+
+export const storage = new DbStorage();
