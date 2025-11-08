@@ -1,4 +1,4 @@
-import { Home, Calculator, Map, MessageSquare, ShoppingBag, Leaf, Target, Sparkles, BarChart3, Brain } from "lucide-react";
+import { Home, Calculator, Map, MessageSquare, ShoppingBag, Leaf, Target, Sparkles, BarChart3, Brain, Navigation } from "lucide-react";
 import {
   Sidebar,
   SidebarContent,
@@ -17,6 +17,7 @@ const menuItems = [
   { title: "Dashboard", url: "/dashboard", icon: Home },
   { title: "Analytics", url: "/analytics", icon: BarChart3 },
   { title: "AI Predictions", url: "/predictions", icon: Brain },
+  { title: "Eco-Route", url: "/eco-route", icon: Navigation },
   { title: "Calculator", url: "/calculator", icon: Calculator },
   { title: "Goals", url: "/goals", icon: Target },
   { title: "Eco Map", url: "/map", icon: Map },

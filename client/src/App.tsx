@@ -13,6 +13,7 @@ import Goals from "@/pages/Goals";
 import Recommendations from "@/pages/Recommendations";
 import Analytics from "@/pages/Analytics";
 import Predictions from "@/pages/Predictions";
+import EcoRoute from "@/pages/EcoRoute";
 import AuthForm from "@/components/AuthForm";
 import MapModule from "@/components/MapModule";
 import ChatInterface from "@/components/ChatInterface";
@@ -103,6 +104,9 @@ function AppContent() {
               </Route>
               <Route path="/predictions">
                 <Predictions />
+              </Route>
+              <Route path="/eco-route">
+                <EcoRoute />
               </Route>
               <Route path="/calculator">
                 <Calculator />

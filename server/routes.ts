@@ -428,6 +428,71 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  app.post("/api/eco-route", requireAuth, async (req: Request, res: Response) => {
+    try {
+      const { start, end } = req.body;
+      
+      if (!start || !end) {
+        return res.status(400).json({ error: "Start and end locations are required" });
+      }
+
+      const baseDistance = 10 + Math.random() * 20;
+      const ecoDistance = baseDistance * (1.05 + Math.random() * 0.1);
+      
+      const standardTime = baseDistance * 2.5 + Math.random() * 10;
+      const ecoTime = ecoDistance * 2.2 + Math.random() * 5;
+      
+      const avgFuelConsumption = 0.08;
+      const standardFuel = baseDistance * avgFuelConsumption;
+      const ecoFuel = ecoDistance * (avgFuelConsumption * 0.65);
+      const fuelSaved = standardFuel - ecoFuel;
+      
+      const co2PerLiter = 2.31;
+      const standardCO2 = standardFuel * co2PerLiter;
+      const ecoCO2 = ecoFuel * co2PerLiter;
+      const co2Saved = standardCO2 - ecoCO2;
+      
+      const trafficLevels = ["Low", "Moderate", "High"];
+      const standardTraffic = trafficLevels[Math.floor(Math.random() * 3)];
+      const ecoTraffic = trafficLevels[Math.floor(Math.random() * 2)];
+      
+      const waypoints = [
+        { lat: 40.7128 + Math.random() * 0.1, lng: -74.0060 + Math.random() * 0.1, name: start },
+        { lat: 40.7128 + Math.random() * 0.15, lng: -74.0060 + Math.random() * 0.15, name: "Via Green Park" },
+        { lat: 40.7128 + Math.random() * 0.2, lng: -74.0060 + Math.random() * 0.2, name: "Via Eco Boulevard" },
+        { lat: 40.7128 + Math.random() * 0.25, lng: -74.0060 + Math.random() * 0.25, name: end },
+      ];
+
+      const route = {
+        standardRoute: {
+          distance: parseFloat(baseDistance.toFixed(2)),
+          time: parseFloat(standardTime.toFixed(1)),
+          fuel: parseFloat(standardFuel.toFixed(2)),
+          co2: parseFloat(standardCO2.toFixed(2)),
+          traffic: standardTraffic,
+        },
+        ecoRoute: {
+          distance: parseFloat(ecoDistance.toFixed(2)),
+          time: parseFloat(ecoTime.toFixed(1)),
+          fuel: parseFloat(ecoFuel.toFixed(2)),
+          co2: parseFloat(ecoCO2.toFixed(2)),
+          traffic: ecoTraffic,
+          waypoints,
+        },
+        savings: {
+          fuel: parseFloat(fuelSaved.toFixed(2)),
+          co2: parseFloat(co2Saved.toFixed(2)),
+          cost: parseFloat((fuelSaved * 1.5).toFixed(2)),
+        },
+      };
+
+      res.json(route);
+    } catch (error) {
+      console.error("Eco-route error:", error);
+      res.status(500).json({ error: "Failed to calculate eco-route" });
+    }
+  });
+
   const httpServer = createServer(app);
 
   return httpServer;
