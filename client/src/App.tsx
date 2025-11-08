@@ -3,28 +3,140 @@ import { queryClient } from "./lib/queryClient";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
-import NotFound from "@/pages/not-found";
+import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
+import { AppSidebar } from "@/components/app-sidebar";
+import ThemeToggle from "@/components/ThemeToggle";
+import Landing from "@/pages/Landing";
+import Dashboard from "@/pages/Dashboard";
+import AuthForm from "@/components/AuthForm";
+import MapModule from "@/components/MapModule";
+import ChatInterface from "@/components/ChatInterface";
+import ProductCard from "@/components/ProductCard";
+import { useState } from "react";
+import bottleImage from "@assets/generated_images/Reusable_water_bottle_product_3de846b6.png";
+import toothbrushImage from "@assets/generated_images/Bamboo_toothbrush_product_716afcae.png";
+import bagImage from "@assets/generated_images/Reusable_shopping_bag_product_5094c408.png";
+import chargerImage from "@assets/generated_images/Solar_charger_product_34767e19.png";
+import { useLocation } from "wouter";
 
 function Router() {
+  const [, setLocation] = useLocation();
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+
+  const handleAuthSuccess = () => {
+    setIsAuthenticated(true);
+    setLocation("/dashboard");
+  };
+
+  const handleGetStarted = () => {
+    setLocation("/auth");
+  };
+
+  if (!isAuthenticated) {
+    return (
+      <Switch>
+        <Route path="/auth">
+          <AuthForm onAuthSuccess={handleAuthSuccess} />
+        </Route>
+        <Route path="/">
+          <Landing onGetStarted={handleGetStarted} />
+        </Route>
+        <Route>
+          <Landing onGetStarted={handleGetStarted} />
+        </Route>
+      </Switch>
+    );
+  }
+
   return (
     <Switch>
-      {/* Add pages below */}
-      {/* <Route path="/" component={Home}/> */}
-      {/* Fallback to 404 */}
-      <Route component={NotFound} />
+      <Route path="/dashboard">
+        <Dashboard />
+      </Route>
+      <Route path="/map">
+        <div className="space-y-6">
+          <h1 className="text-3xl font-bold">Eco-Friendly Locations</h1>
+          <MapModule />
+        </div>
+      </Route>
+      <Route path="/chat">
+        <div className="space-y-6">
+          <h1 className="text-3xl font-bold">AI Assistant</h1>
+          <ChatInterface />
+        </div>
+      </Route>
+      <Route path="/products">
+        <div className="space-y-6">
+          <h1 className="text-3xl font-bold">Sustainable Products</h1>
+          <p className="text-muted-foreground">Discover eco-friendly alternatives for your lifestyle</p>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <ProductCard
+              image={bottleImage}
+              name="Eco Steel Bottle"
+              price="$24.99"
+              carbonSaving="12 kg"
+              ecoScore={9}
+              category="Reusables"
+            />
+            <ProductCard
+              image={toothbrushImage}
+              name="Bamboo Brush Set"
+              price="$12.99"
+              carbonSaving="3 kg"
+              ecoScore={8}
+              category="Personal Care"
+            />
+            <ProductCard
+              image={bagImage}
+              name="Organic Cotton Bag"
+              price="$15.99"
+              carbonSaving="8 kg"
+              ecoScore={9}
+              category="Shopping"
+            />
+            <ProductCard
+              image={chargerImage}
+              name="Solar Power Bank"
+              price="$39.99"
+              carbonSaving="15 kg"
+              ecoScore={10}
+              category="Electronics"
+            />
+          </div>
+        </div>
+      </Route>
+      <Route path="/">
+        <Dashboard />
+      </Route>
     </Switch>
   );
 }
 
-function App() {
+export default function App() {
+  const style = {
+    "--sidebar-width": "16rem",
+    "--sidebar-width-icon": "3rem",
+  };
+
   return (
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>
+        <SidebarProvider style={style as React.CSSProperties}>
+          <div className="flex h-screen w-full">
+            <AppSidebar />
+            <div className="flex flex-col flex-1">
+              <header className="flex items-center justify-between p-4 border-b">
+                <SidebarTrigger data-testid="button-sidebar-toggle" />
+                <ThemeToggle />
+              </header>
+              <main className="flex-1 overflow-auto p-6">
+                <Router />
+              </main>
+            </div>
+          </div>
+        </SidebarProvider>
         <Toaster />
-        <Router />
       </TooltipProvider>
     </QueryClientProvider>
   );
 }
-
-export default App;
