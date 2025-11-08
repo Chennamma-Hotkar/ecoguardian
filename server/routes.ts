@@ -2,7 +2,7 @@ import type { Express, Request, Response } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
 import { insertUserSchema, insertCarbonEntrySchema, insertGoalSchema } from "@shared/schema";
-import { getChatResponse, getProductRecommendations, generateResourcePredictions } from "./ai";
+import { getChatResponse, getProductRecommendations, generateResourcePredictions, generateRoomRedesign } from "./ai";
 import session from "express-session";
 import { scrypt, randomBytes, timingSafeEqual } from "crypto";
 import { promisify } from "util";
@@ -382,6 +382,37 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (error) {
       console.error("Recommendations error:", error);
       res.status(500).json({ error: "Failed to get recommendations" });
+    }
+  });
+
+  app.post("/api/room-redesign", requireAuth, async (req: Request, res: Response) => {
+    try {
+      const { roomRequest } = req.body;
+
+      if (!roomRequest || typeof roomRequest !== 'string') {
+        return res.status(400).json({ error: "Room request is required" });
+      }
+
+      const { recommendations, roomType } = await generateRoomRedesign(roomRequest);
+
+      const imageMap: Record<string, string> = {
+        bedroom: "Sustainable_bedroom_with_eco_furniture_d9ade003.png",
+        living_room: "Sustainable_living_room_eco_design_4d099e2b.png",
+        kitchen: "Sustainable_kitchen_eco_design_d360f33b.png",
+        office: "Sustainable_home_office_eco_design_6b5e70f5.png",
+        general: "Sustainable_bedroom_with_eco_furniture_d9ade003.png"
+      };
+
+      const imagePath = imageMap[roomType] || imageMap.general;
+
+      res.json({ 
+        recommendations, 
+        roomType,
+        imagePath
+      });
+    } catch (error) {
+      console.error("Room redesign error:", error);
+      res.status(500).json({ error: "Failed to generate room redesign" });
     }
   });
 

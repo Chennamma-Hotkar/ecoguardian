@@ -168,6 +168,105 @@ function getFallbackRecommendations(highestCategory: string): string[] {
   return recommendations[highestCategory] || recommendations.transportation;
 }
 
+export async function generateRoomRedesign(
+  roomRequest: string
+): Promise<{
+  recommendations: string[];
+  roomType: string;
+}> {
+  try {
+    const prompt = `You are an expert interior designer specializing in sustainable, eco-friendly room design. A user wants to redesign their space sustainably.
+
+User Request: "${roomRequest}"
+
+Provide 4-5 specific, actionable recommendations for sustainable products and design ideas. Each recommendation should:
+- Be specific and practical
+- Focus on eco-friendly materials
+- Include product types (furniture, lighting, plants, etc.)
+- Mention sustainability benefits
+
+Format each recommendation as a concise sentence (1-2 lines).
+
+Also identify the room type (bedroom, living room, kitchen, office, or general) based on the request.
+
+Format as JSON:
+{
+  "recommendations": ["rec1", "rec2", "rec3", "rec4"],
+  "roomType": "bedroom/living_room/kitchen/office/general"
+}`;
+
+    const completion = await openai.chat.completions.create({
+      model: "gpt-4o-mini",
+      messages: [{ role: "user", content: prompt }],
+      max_tokens: 600,
+      temperature: 0.8,
+      response_format: { type: "json_object" }
+    });
+
+    const response = completion.choices[0].message.content;
+    if (!response) {
+      throw new Error("Empty response from OpenAI");
+    }
+
+    return JSON.parse(response);
+  } catch (error) {
+    console.error("OpenAI room redesign error:", error);
+    
+    const requestLower = roomRequest.toLowerCase();
+    let roomType = "general";
+    let recommendations: string[] = [];
+    
+    if (requestLower.includes('bedroom') || requestLower.includes('sleep')) {
+      roomType = "bedroom";
+      recommendations = [
+        "Recycled-wood bed frame - Choose furniture made from reclaimed or FSC-certified wood for sustainable sleeping space",
+        "Solar-powered bedside lamp - Install LED solar lamps to reduce energy consumption and create warm ambient lighting",
+        "Low-energy air conditioning - Opt for A+++ rated AC units with smart temperature control to minimize power usage",
+        "Large indoor plants - Add snake plants and peace lilies to improve air quality naturally while enhancing room aesthetics",
+        "Organic cotton bedding - Select GOTS-certified organic bedding in earth tones to reduce chemical exposure and support sustainable agriculture"
+      ];
+    } else if (requestLower.includes('living') || requestLower.includes('lounge')) {
+      roomType = "living_room";
+      recommendations = [
+        "Recycled-wood coffee table - Choose furniture crafted from reclaimed wood with natural grain patterns",
+        "Organic fabric sofa - Select sofas upholstered with GOTS-certified organic cotton or hemp fabrics",
+        "Solar floor lamp - Install energy-efficient LED floor lamps with solar charging capabilities",
+        "Indoor plants - Add fiddle leaf figs, pothos, and monstera plants to purify air and bring nature indoors",
+        "Natural fiber rug - Use rugs made from sustainable jute, sisal, or bamboo fibers instead of synthetic materials"
+      ];
+    } else if (requestLower.includes('kitchen') || requestLower.includes('cook')) {
+      roomType = "kitchen";
+      recommendations = [
+        "Bamboo countertops - Replace traditional counters with sustainable bamboo or recycled glass composite surfaces",
+        "Energy-efficient appliances - Upgrade to A+++ rated appliances to reduce electricity consumption by 30-50%",
+        "LED under-cabinet lighting - Install energy-saving LED strips for task lighting with minimal power draw",
+        "Herb window planters - Grow fresh herbs indoors to reduce packaging waste and food miles",
+        "Compost bin system - Set up an odor-free indoor composting solution to divert food waste from landfills"
+      ];
+    } else if (requestLower.includes('office') || requestLower.includes('workspace') || requestLower.includes('work')) {
+      roomType = "office";
+      recommendations = [
+        "Standing desk from reclaimed wood - Invest in ergonomic furniture made from sustainable materials",
+        "Solar-powered desk lamp - Use renewable energy for task lighting to reduce grid electricity consumption",
+        "Air-purifying plants - Add pothos, spider plants, and rubber plants to improve indoor air quality naturally",
+        "Bamboo desk organizers - Replace plastic organizers with renewable bamboo accessories",
+        "Natural fiber chair - Choose ergonomic seating with organic fabric upholstery and sustainable frame materials"
+      ];
+    } else {
+      roomType = "general";
+      recommendations = [
+        "Reclaimed wood furniture - Choose furniture pieces made from recycled or sustainably sourced wood materials",
+        "Solar-powered lighting - Install energy-efficient LED lights with solar charging for ambient illumination",
+        "Energy-efficient appliances - Select A+++ rated devices to minimize electricity consumption",
+        "Indoor plants - Add various air-purifying plants like snake plants, peace lilies, and pothos",
+        "Natural materials - Use organic fabrics, bamboo, cork, and other renewable materials for decor and furnishings"
+      ];
+    }
+    
+    return { recommendations, roomType };
+  }
+}
+
 export async function generateResourcePredictions(userStats: {
   dailyAverage: number;
   weeklyTotal: number;
