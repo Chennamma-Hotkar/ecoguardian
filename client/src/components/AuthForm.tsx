@@ -54,9 +54,10 @@ export default function AuthForm({ onAuthSuccess }: AuthFormProps) {
       onAuthSuccess?.(data);
     },
     onError: (error: any) => {
+      const errorMessage = error?.message || "Username already exists";
       toast({
         title: "Signup failed",
-        description: error.message || "Username already exists",
+        description: errorMessage,
         variant: "destructive",
       });
     },
